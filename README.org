@@ -1,0 +1,13 @@
+#+title: file-clipboard-copy.el
+#+author: Andrew Peck
+
+Copy a file (not its contents) to the clipboard, so it can be pasted into other programs like a file manager.
+
+Requires [[https://github.com/astrand/xclip][xclip]].
+
+* Usage
+
+Call ~file-clipboard-copy~ interactively:
+
+- In a normal buffer: copies the buffer's file.
+- In ~dired~: copies all marked files (or the file at point if none are marked).
