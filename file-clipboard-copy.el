@@ -43,18 +43,22 @@
   (pcase major-mode
     ;; in dired mode take all marked files
     ('dired-mode
-     (if-let* ((files (thread-last
-                        (dired-get-marked-files)
-                        (mapcar (lambda (x) (when x (string-replace " "  "\\ " x)))))))
-         (let ((async-shell-command-display-buffer nil))
-           (async-shell-command (concat "copy-file " (string-join files " "))))
+     (if-let* ((files (dired-get-marked-files)))
+         (file-clipboard-copy--copy-files files)
        (message "No files marked.")))
 
     ;; else take the current buffer
-    (_ (if-let* ((file (string-replace " "  "\\ " buffer-file-name)))
-           (let ((async-shell-command-display-buffer nil))
-             (async-shell-command (format "copy-file %s" file)))
+    (_ (if buffer-file-name
+           (file-clipboard-copy--copy-files (list buffer-file-name))
          (message "Buffer does not have a corresponding buffer-file-name.")))))
+
+(defun file-clipboard-copy--copy-files (files)
+  "Copy FILES to the clipboard as a URI list via xclip."
+  (let ((uris (mapconcat (lambda (f) (concat "file://" (file-truename f))) files "\n")))
+    (with-temp-buffer
+      (insert uris)
+      (call-process-region (point-min) (point-max) "xclip" nil nil nil
+                           "-i" "-sel" "c" "-rmlastnl" "-t" "text/uri-list"))))
 
 (provide 'file-clipboard-copy)
 ;;; file-clipboard-copy.el ends here
