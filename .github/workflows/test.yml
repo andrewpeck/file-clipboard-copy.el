@@ -35,6 +35,7 @@ on:
     # Comment out this section to enable testing of all branches.
     branches:
       - master
+      - main
 
 jobs:
   build:
