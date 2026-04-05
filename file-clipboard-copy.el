@@ -28,9 +28,11 @@
 ;; Uses xclip to copy file to the clipboard, such that a file (not its contents)
 ;; can be pasted into other programs.
 ;;
-;; Works either with the open buffer, or in dired.
+;; Works either with the open buffer, or in Dired.
 ;;
 ;;; Code:
+
+(require 'dired)
 
 ;;;###autoload
 (defun file-clipboard-copy ()
@@ -53,7 +55,7 @@
          (message "Buffer does not have a corresponding buffer-file-name.")))))
 
 (defun file-clipboard-copy--copy-files (files)
-  "Copy FILES to the clipboard as a URI list via xclip."
+  "Copy FILES to the clipboard as a URI list via xclip (external program)."
   (let ((uris (mapconcat (lambda (f) (concat "file://" (file-truename f))) files "\n")))
     (with-temp-buffer
       (insert uris)
@@ -62,4 +64,4 @@
 
 (provide 'file-clipboard-copy)
 ;;; file-clipboard-copy.el ends here
-;; LocalWords:  matcher fontification verilog treesitter
+;; LocalWords:  xclip
